@@ -8,4 +8,4 @@
 
 ### kNN
 ---
-![kNN](knn.png)
+![kNN](knn.svg)

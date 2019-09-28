@@ -1,5 +1,5 @@
-xPoint <- 7
-yPoint <- 2
+xPoint <- 3
+yPoint <- 0
 
 yourPoint <- c(xPoint, yPoint)
 
@@ -41,6 +41,8 @@ colors <- c(  "setosa"      = "red",
               "virginica"   = "blue"  )
               
 
+svg("knn.svg")
+
 plot(iris[, 3:4], pch = 21, bg = colors[iris$Species], 
       col = colors[iris$Species], asp = 1)
 
@@ -48,4 +50,4 @@ xl <- iris[, 3:5]
 class <- kNN(xl, yourPoint, k=6)
 
 points(yourPoint[1], yourPoint[2], pch = 22, bg = colors[class], asp = 1)
-
+dev.off()
