@@ -1,9 +1,8 @@
-LOO = function (xl, class, sortingFunction, task, isLooIncrease) {
+LOO = function (xl, class, sortingFunction, task, isLooIncrease, text) {
     n = dim(xl)[1];
     loo = rep(0, n - 1)
     for (i in 1 : n) {
-        print("i = ")
-        print(i)
+        print(paste("i = ", i))
         X = xl[
             -i,
             1 : 3
@@ -12,19 +11,22 @@ LOO = function (xl, class, sortingFunction, task, isLooIncrease) {
         for (k in 1 : (n - 1)) {
         
             test = task(X, u, k)
-
+            # print(test)
+            # print(class[i])
             if (isLooIncrease(test, class[i])) {
                 loo[k] = loo[k] + 1;
 
             }
+            print(loo[k])
         }
     }
 
     loo = loo / n
+
     x = 1:length(loo)
     y = loo
 
-    plot(x, y,main ="LOO for KNN(k)", xlab="k", ylab="LOO", type = "l")
+    plot(x, y,main = text, xlab="k", ylab="LOO", type = "l")
 
     min = which.min(loo)
     minLoo=round(loo[min],3)
