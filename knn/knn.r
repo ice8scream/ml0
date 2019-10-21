@@ -1,5 +1,6 @@
 # Подключяем LOO
-source('LOO.r')       
+source('knn/LOO.r')       
+source('helpF/Distanse.r', chdir = TRUE)
 
 xPoint <- 3
 yPoint <- 0

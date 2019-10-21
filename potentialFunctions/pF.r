@@ -63,41 +63,41 @@ svg('PF.svg')
 
 plot(iris[, 3:4], main=paste("Potential Functions\nwith Gauss kern"), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
 
-m <- dim(iris)[1]
-gamma <- Gamma(iris[,3:5])
-maxG = max(gamma)
-opacity <- gamma / maxG
+# m <- dim(iris)[1]
+# gamma <- Gamma(iris[,3:5])
+# maxG = max(gamma)
+# opacity <- gamma / maxG
 
-for(i in 1:m) {
-    if(gamma[i] > 0) {
-        color = adjustcolor(colors[iris[i,5]], opacity[i] / 2)
-        draw.circle(iris[i,3], iris[i,4], opacity[i], 40, border = color, col = color)
-        points(iris[i,3],iris[i,4],col="black",bg=color,pch=21)
-        points(iris[i,3],iris[i,4],col="white",pch=13)
-    } else {
-        h <- c(rep(1, m/3), rep(0.5, (m-m/3)))
-        if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,GausKer,h)) {
-            points(iris[i,3],iris[i,4],col="black",pch=22)
-        }
-    }
-}
-dev.off()
+# for(i in 1:m) {
+#     if(gamma[i] > 0) {
+#         color = adjustcolor(colors[iris[i,5]], opacity[i] / 2)
+#         draw.circle(iris[i,3], iris[i,4], opacity[i], 40, border = color, col = color)
+#         points(iris[i,3],iris[i,4],col="black",bg=color,pch=21)
+#         points(iris[i,3],iris[i,4],col="white",pch=13)
+#     } else {
+#         h <- c(rep(1, m/3), rep(0.5, (m-m/3)))
+#         if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,GausKer,h)) {
+#             points(iris[i,3],iris[i,4],col="black",pch=22)
+#         }
+#     }
+# }
+# dev.off()
 
-svg('PFMap.svg')
-plot(iris[, 3:4], main=paste("Potential Functions classification Map\nwith Gauss kern"), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
+# svg('PFMap.svg')
+# plot(iris[, 3:4], main=paste("Potential Functions classification Map\nwith Gauss kern"), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
 
- for (i in seq(0,7,0.1)) {
-    for (j in seq(0,2.5,0.1)){
-        color <- potentialF(iris[,3:5],c(i,j),gamma,GausKer)
-        if(color != "unknown") {
-            points(i,j,pch=21, col = colors[color])
-        }
-    }
-  }
+#  for (i in seq(0,7,0.1)) {
+#     for (j in seq(0,2.5,0.1)){
+#         color <- potentialF(iris[,3:5],c(i,j),gamma,GausKer)
+#         if(color != "unknown") {
+#             points(i,j,pch=21, col = colors[color])
+#         }
+#     }
+#   }
 
-for (i in 1:m) {
-        if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,GausKer,h)){
-             points(iris[i,3],iris[i,4],col="black",pch=22)
-        }
-    }
-dev.off()
+# for (i in 1:m) {
+#         if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,GausKer,h)){
+#              points(iris[i,3],iris[i,4],col="black",pch=22)
+#         }
+#     }
+# dev.off()

@@ -1,15 +1,14 @@
 # source('parsen/parsen.r')
-# Функция расстояния
-Distanse <- function(u,v) sqrt(sum((u - v)^2))
+source('helpF/Distanse.r', chdir = TRUE)
 
-# Функции ядер
+# Р¤СѓРЅРєС†РёРё СЏРґРµСЂ
 RectKer <- function(r) (abs(r) <= 1) * 0.5
 TriaKer <- function(r) (abs(r) <= 1) * (1 - abs(r))
 QuarKer <- function(r) (abs(r) <= 1) * (1 - r^2)^2
 EpanKer <- function(r) (abs(r) <= 1) * (1 - r^2)
 GausKer <- function(r) dnorm(r)
 
-# Функция парзеновского окна
+# Р¤СѓРЅРєС†РёСЏ РєР»Р°СЃСЃРёС„РёРєР°С†РёРё
 parsen <- function(x, z, h, kerF) {
     m <- dim(x)[1]
     n <- dim(x)[2]-1
@@ -29,7 +28,7 @@ parsen <- function(x, z, h, kerF) {
     return(class)
 }
 
-# Leve One Out для парзеновского окна
+# Leve One Out РґР»СЏ РїР°СЂР·РµРЅРѕРІСЃРєРѕРіРѕ РѕРєРЅР°
 LOO <- function(x, kerF, kerN="") {
     m <- dim(x)[1]
     n <- dim(x)[2] - 1
@@ -43,7 +42,7 @@ LOO <- function(x, kerF, kerN="") {
             if(class1 != class2)  mark[h] <- mark[h] + 1/m
         }
     }
-    plot(params, mark, type="l",xlab="Ширина окна", ylab="Оценка", main=paste("LOO для парзеновского окна c ", kerN))
+    plot(params, mark, type="l",xlab="ЕДЌД‘ДЌГ­Е• Г®Д™Г­Е•", ylab="ГЋГ¶ДєГ­Д™Е•", main=paste("LOO РґР»СЏ РїР°СЂР·РµРЅРѕРІСЃРєРѕРіРѕ РѕРєРЅР° СЃ ", kerN))
     minPoint <- c(params[which.min(mark)], round(min(mark),4))
     text <- paste("h = ",minPoint[1],"\nLOO = ",minPoint[2])
     points(minPoint[1], minPoint[2], pch=19, col="firebrick1", bg="black")
@@ -52,12 +51,14 @@ LOO <- function(x, kerF, kerN="") {
 
 xl <- iris[, 3:5]
 colors <- c( "setosa"="red", "versicolor"="green3", "virginica"="blue" )
+
+# РљР»Р°СЃСЃРёС„РёС†РёСЂРѕРІР°С‚СЊ РѕР±СЊРµРєС‚ СЃ РєРѕРѕСЂРґРёРЅР°С‚Р°РјРё z1,z2
 FindParsen <- function(z1, z2, h, kerF) {
     points(z1,z2, pch = 21, col=colors[parsen(xl,c(z1,z2),h,kerF)])
 }
 
-PlotMapParsen <- function(h = 0.1, kerF = GausKer, label="Гаусовским ядром") {
-    plot(iris[, 3:4], main=paste("Карта классификации\nдля парзеновского окна c ", label), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
+PlotMapParsen <- function(h = 0.1, kerF = GausKer, label="Р“Р°СѓСЃСЃРѕРІСЃРєРёРј") {
+    plot(iris[, 3:4], main=paste("РљР°СЂС‚Р° РєР»Р°СЃСЃРёС„РёРєР°С†РёРё\nРґР»СЏ РїР°СЂР·РµРЅРѕРІСЃРєРѕРіРѕ РѕРєРЅР° СЃ", label), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
     for (i in seq(0,7,0.1)) {
         for (j in seq(0,3,0.1)){
          FindParsen(i,j,h,kerF)
@@ -66,32 +67,32 @@ PlotMapParsen <- function(h = 0.1, kerF = GausKer, label="Гаусовским ядром") {
 }
 
 # svg('RectKerLOO.svg')
-#     LOO(iris[,3:5],RectKer,"прямоугольным ядром");
+#     LOO(iris[,3:5],RectKer,"РїСЂСЏРјРѕСѓРіРѕР»СЊРЅС‹Рј СЏРґСЂРѕРј");
 # dev.off()
 # svg('TriaKerLOO.svg')
-#     LOO(iris[,3:5],TriaKer,"треугольным ядром");
+#     LOO(iris[,3:5],TriaKer,"С‚СЂРµСѓРіРѕР»СЊРЅС‹Рј СЏРґСЂРѕРј:);
 # dev.off()
 # svg('QuarKerLOO.svg')
-#     LOO(iris[,3:5],QuarKer,"квартическим ядром");
+#     LOO(iris[,3:5],QuarKer,"РєРІР°СЂС‚РёС‡РµСЃРєРёРј СЏРґСЂРѕРј");
 # dev.off()
 # svg('EpanKerLOO.svg')
-#     LOO(iris[,3:5],EpanKer,"ядром Епанечникова");
+#     LOO(iris[,3:5],EpanKer,"СЏРґСЂРѕРј Р•РїР°РЅРµС‡РЅРёРєРѕРІР°");
 # dev.off()
 # svg('GausKerLOO.svg'))
-#     LOO(iris[,3:5],GausKer,"Гаусовским ядром");
+#     LOO(iris[,3:5],GausKer,"Р“Р°СѓСЃСЃРѕРІСЃРєРёРј");
 # dev.off()
 
 # svg('RectKerMap.svg')
-#     PlotMapParsen(h = 0.35, kerF = RectKer, label="прямоугольным ядром")
+#     PlotMapParsen(h = 0.35, kerF = RectKer, label="РїСЂСЏРјРѕСѓРіРѕР»СЊРЅС‹Рј СЏРґСЂРѕРј")
 # dev.off()
 # svg('TriaKerMap.svg')
-#     PlotMapParsen(h = 0.35, kerF = RectKer, label="треугольным ядром")
+#     PlotMapParsen(h = 0.35, kerF = RectKer, label="С‚СЂРµСѓРіРѕР»СЊРЅС‹Рј СЏРґСЂРѕРј")
 # dev.off()
 # svg('QuarKerMap.svg')
-#     PlotMapParsen(h = 0.35, kerF = RectKer, label="квартическим ядром")
+#     PlotMapParsen(h = 0.35, kerF = RectKer, label="РєРІР°СЂС‚РёС‡РµСЃРєРёРј СЏРґСЂРѕРј")
 # dev.off()
 # svg('EpanKerMap.svg')
-#     PlotMapParsen(h = 0.35, kerF = RectKer, label="ядром Епанечникова")
+#     PlotMapParsen(h = 0.35, kerF = RectKer, label="Л™СЏРґСЂРѕРј Р•РїР°РЅРµС‡РЅРёРєРѕРІР°")
 # dev.off()
 # svg('GausKerMap.svg')
 #     PlotMapParsen()
