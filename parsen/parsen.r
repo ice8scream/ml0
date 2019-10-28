@@ -1,5 +1,6 @@
 # source('parsen/parsen.r')
-source('helpF/Distanse.r', chdir = TRUE)
+# source('helpF/Distanse.r', chdir = TRUE)
+Distanse <- function(u,v) sqrt(sum((u - v)^2))
 
 # Функции ядер
 RectKer <- function(r) (abs(r) <= 1) * 0.5
