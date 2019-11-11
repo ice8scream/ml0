@@ -5,6 +5,8 @@ library("plotrix")
 Distanse <- function(u,v) sqrt(sum((u - v)^2))
 source('parsen/parsen.r', chdir = TRUE)
 
+KernFunction <- GausKer
+
 potentialF <- function(x, z, g, kerF, h=c()) {
     m <- dim(x)[1]
     n <- dim(x)[2]-1
@@ -43,7 +45,7 @@ pError <- function(x,g,kerF, h) {
     return(error)
 }
 
-Gamma <- function(x, kerF=GausKer, h=c(), delta = 10) {
+Gamma <- function(x, kerF=KernFunction, h=c(), delta = 10) {
     m <- dim(x)[1]
     n <- dim(x)[2]-1
     
@@ -60,9 +62,10 @@ Gamma <- function(x, kerF=GausKer, h=c(), delta = 10) {
     return(g)
 }
 
-# svg('PF.svg')
+png('PFTest.png')
 
-# plot(iris[, 3:4], main=paste("Potential Functions\nwith Gauss kern"), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
+plot(iris[, 3:4], main=paste("Potential Functions\nwith Gauss kern"), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
+
 
 m <- dim(iris)[1]
 gamma <- Gamma(iris[,3:5])
@@ -70,27 +73,37 @@ maxG = max(gamma)
 opacity <- gamma / maxG
 h <- c(rep(1, m/3), rep(0.5, (m-m/3)))
 
-# for(i in 1:m) {
-#     if(gamma[i] > 0) {
-#         color = adjustcolor(colors[iris[i,5]], opacity[i] / 2)
-#         draw.circle(iris[i,3], iris[i,4], opacity[i], 40, border = color, col = color)
-#         points(iris[i,3],iris[i,4],col="black",bg=color,pch=21)
-#         points(iris[i,3],iris[i,4],col="white",pch=13)
-#     } else {
-#         h <- c(rep(1, m/3), rep(0.5, (m-m/3)))
-#         if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,GausKer,h)) {
-#             points(iris[i,3],iris[i,4],col="black",pch=22)
-#         }
-#     }
-# }
-# dev.off()
+for(i in 1:m) {
+    if(gamma[i] > 0) {
+        color = adjustcolor(colors[iris[i,5]], opacity[i] / 2)
+        draw.circle(iris[i,3], iris[i,4], opacity[i], 40, border = color, col = color)
+    }
+}
 
-svg('PFMapG.svg')
+for(i in 1:m) {
+    points(iris[i,3],iris[i,4],col="gray48", bg=colors[iris[i,5]],pch=21)
+}
+
+for(i in 1:m) {
+    if(gamma[i] > 0) {
+        
+        points(iris[i,3],iris[i,4],col="white",pch=13)
+    } else {
+        h <- c(rep(1, m/3), rep(0.5, (m-m/3)))
+        if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,KernFunction,h)) {
+            points(iris[i,3],iris[i,4],col="black",pch=22)
+        }
+    }
+}
+
+ dev.off()
+
+png('PFMapG.png')
 plot(iris[, 3:4], main=paste("Potential Functions classification Map\nwith Gauss kern"), pch = 21, bg = colors[iris$Species], col = colors[iris$Species], asp='1') 
 
  for (i in seq(0,7,0.1)) {
     for (j in seq(0,2.5,0.1)){
-        color <- potentialF(iris[,3:5],c(i,j),gamma,GausKer,h)
+        color <- potentialF(iris[,3:5],c(i,j),gamma,KernFunction,h)
         if(color != "unknown") {
             points(i,j,pch=21, col = colors[color])
         }
@@ -98,8 +111,8 @@ plot(iris[, 3:4], main=paste("Potential Functions classification Map\nwith Gauss
   }
 
 for (i in 1:m) {
-        if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,GausKer,h)){
+        if(iris[i,5] != potentialF(iris[,3:5],iris[i,3:4],gamma,KernFunction,h)){
              points(iris[i,3],iris[i,4],col="black",pch=22)
         }
     }
-dev.off()
+ dev.off()
