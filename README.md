@@ -326,4 +326,68 @@ LevelLines <- function(mx, C = c(0,0), limits = matrix(c(-5, -5, 5, 5), nrow = 2
 |:-:|:-:|:-:|
 |![LL](LevelLines/nocor.svg)|![LL](LevelLines/eq.svg)|![LL](LevelLines/cor.svg)|
 
-----
+---
+
+---
+## Наивный байесовский классификатор
+
+Пусть имеем набор некоторых объектов, имеющих **n** числовых признаков **f<sub>i</sub>**. Будем считать, что признаки независимы друг от друга. Тогда функция правдоподобия классов представима в виде: <sub><sub><a href="https://www.codecogs.com/eqnedit.php?latex=$P_y(x)=p_{y_1}(f_1)\dots&space;p_{y_n}(f_n),&space;y\in&space;Y$" target="_blank"><img src="https://latex.codecogs.com/gif.latex?$P_y(x)=p_{y_1}(f_1)\dots&space;p_{y_n}(f_n),&space;y\in&space;Y$" title="$P_y(x)=p_{y_1}(f_1)\dots p_{y_n}(f_n), y\in Y$" /></a></sub></sub>, где <sub><a href="https://www.codecogs.com/eqnedit.php?latex=$p_{y_i}(f_i)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?$p_{y_i}(f_i)" title="$p_{y_i}(f_i)" /></a></sub> - плотность распределения значений **i**-го признака. Подставив функцию правдоподобия классов в оптимальный байесовский классификатор получим: <sub><sub><sub><sub><sub><a href="https://www.codecogs.com/eqnedit.php?latex=$a(x)=&space;\arg\max\limits_{y\in&space;Y}(\lambda_y\rho_y&space;\prod\limits_{i=1}^{n}&space;P_{y_i}(f_i))" target="_blank"><img src="https://latex.codecogs.com/gif.latex?$a(x)=&space;\arg\max\limits_{y\in&space;Y}(\lambda_y\rho_y&space;\prod\limits_{i=1}^{n}&space;P_{y_i}(f_i))" title="$a(x)= \arg\max\limits_{y\in Y}(\lambda_y\rho_y \prod\limits_{i=1}^{n} P_{y_i}(f_i))" /></a></sub></sub></sub></sub></sub> - наивный нормальный байесовский классификатор.
+Наивный из-за того, что предположение о независимости признаков является наивным.
+
+Вычислим плотность с помощью формулы гауссовской плотности: 
+<sub><sub><sub><sub><sub><sub><sub><sub><sub>![nb](naivnibaies/GausP.png)</sub></sub></sub></sub></sub></sub></sub></sub></sub> , где <sub><a href="https://www.codecogs.com/eqnedit.php?latex=$\mu_{y_i}$" target="_blank"><img src="https://latex.codecogs.com/png.latex?$\mu_{y_i}$" title="$\mu_{y_i}$" /></a></sub> - мат.ожидание **i**-того признака класса **y**.
+
+Прологарифмируем максимизируемое выражение, в таком случае классификатор приобретает вид: <a href="https://www.codecogs.com/eqnedit.php?latex=$a(x)=\arg\max\limits_{y\in&space;Y}(\ln(\lambda_y\rho_y)&space;&plus;&space;\sum\limits_{i=1}^{n}\ln&space;P_{y_i}(f_i))$" target="_blank"><img src="https://latex.codecogs.com/png.latex?$a(x)=\arg\max\limits_{y\in&space;Y}(\ln(\lambda_y\rho_y)&space;&plus;&space;\sum\limits_{i=1}^{n}\ln&space;P_{y_i}(f_i))$" title="$a(x)=\arg\max\limits_{y\in Y}(\ln(\lambda_y\rho_y) + \sum\limits_{i=1}^{n}\ln P_{y_i}(f_i))$" /></a>
+
+---
+## Листинг программы на языке R
+```R
+# Мат ожидание
+Mathw <- function(xs) {
+  l <- dim(xs)[2]
+  res <- matrix(NA, 1, l)
+  for (i in seq(l)) {
+    res[1, i] <- mean(xs[,i])
+  }
+  return(c(res))
+}
+
+# Дисперсия
+Disp <- function(xs, mu) {
+  rows <- dim(xs)[1]
+  cols <- dim(xs)[2]
+  
+  res <- matrix(0, 1, cols)
+  for (i in seq(rows)) {
+    res <- res + (xs[i,] - mu)^2
+  }
+  
+  return(c(res/(rows-1)))
+}
+
+# Плотность
+Pyj <- function(x, M, D){
+  return( (1/(D*sqrt(2*pi))) * exp(-1 * ((x - M)^2)/(2*D^2)) )
+}
+
+naivniBayes <- function(x, Mathw, Disp, Prob, Prior) {
+  res <- log(Prob * Prior)
+  l <- length(x)
+  
+  for (i in seq(l)) {
+    p <- Pyj(x[i], Mathw[i], Disp[i])
+    res <- res + log(p)
+  }
+  
+  return(res)
+}
+
+```
+
+---
+## График  классификатора
+<div align="center">
+<img src="naivnibaies/plot.png">
+</div>
+
+---
